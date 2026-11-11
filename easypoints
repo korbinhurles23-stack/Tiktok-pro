@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Referral Rewards Studio</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 40%,#2c0b15,#150609 45%,#080304);font-family:Inter,system-ui,sans-serif;color:#f0ece6;padding:24px}
+.stage{display:flex;gap:26px;align-items:flex-start}
+.phone{position:relative;border-radius:34px;padding:7px;background:linear-gradient(180deg,#2a0d14,#150508);box-shadow:0 0 0 1px rgba(255,90,120,.22),0 26px 60px -20px rgba(220,30,70,.55)}
+.screen{position:relative;overflow:hidden;border-radius:28px;background:#100c0a;border:1px solid rgba(255,255,255,.07)}
+.l{width:300px;transform:rotate(-1.1deg)}
+.r{width:254px;transform:rotate(1.4deg);margin-top:60px}
+.l .screen{height:560px;padding:0 12px}
+.r .screen{height:560px;background:#0b0b0d}
+.notch{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:74px;height:15px;border-radius:8px;background:#07070a;z-index:5}
+.checker{height:28px;margin:0 -12px 10px;background-image:repeating-conic-gradient(#d4d4d4 0 25%,#6b6b6b 0 50%);background-size:15px 15px;opacity:.8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:12px}
+.stat{background:#191310;border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:7px 6px}
+.stat b{display:block;font-size:15px;font-weight:600;line-height:1.1}
+.stat span{display:block;font-size:7.5px;color:#8b8378;margin-top:1px}
+.stat i{display:block;font-size:7px;color:#b9c46a;margin-top:5px;font-style:normal}
+.panel{border:1px solid rgba(215,238,74,.55);border-radius:12px;padding:11px 10px;background:linear-gradient(180deg,rgba(215,238,74,.06),rgba(215,238,74,.015))}
+.ptitle{display:flex;align-items:center;gap:6px;font-size:8.5px;font-weight:600;letter-spacing:.13em;color:#d7ee4a;margin-bottom:6px}
+.ptitle svg{width:10px;height:10px}
+.sub{font-size:8px;color:#9a9288;line-height:1.45;margin-bottom:10px}
+.lbl{font-size:7.5px;color:#8b8378;margin-bottom:4px;display:block}
+.inpwrap{display:flex;align-items:center;gap:6px;background:#0d0a09;border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:7px 8px;margin-bottom:9px}
+.inpwrap svg{width:11px;height:11px;flex:none;stroke:#6f675e}
+.inpwrap input{background:none;border:0;outline:0;color:#e9e4dc;font-size:8px;width:100%;font-family:inherit}
+.inpwrap.ok{border-color:rgba(215,238,74,.5)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:9px}
+.sel{background:#0d0a09;border:1px solid rgba(255,255,255,.09);border-radius:7px;padding:6px 7px;display:flex;align-items:center;gap:5px;font-size:7.5px;color:#d9d3cb}
+.sel .flag{width:11px;height:8px;border-radius:1px;background:linear-gradient(#b22234 33%,#fff 33% 66%,#3c3b6e 66%)}
+.sel .dot{width:9px;height:9px;border-radius:2px;background:#3c8f4a}
+.sel small{display:block;font-size:6.5px;color:#7d766d}
+.go{width:100%;border:0;border-radius:8px;padding:9px;background:#d7ee4a;color:#14180a;font-weight:600;font-size:8.5px;font-family:inherit;cursor:pointer}
+.go:disabled{background:#2a2a20;color:#6b6a58;cursor:not-allowed}
+.bar{height:2.5px;border-radius:2px;background:rgba(255,255,255,.1);margin-top:8px;overflow:hidden}
+.bar div{height:100%;width:0;background:#d7ee4a;transition:width .35s}
+.status{font-size:7px;color:#8b8378;margin-top:6px;min-height:9px}
+.status.err{color:#e8857c}.status.done{color:#b9c46a}
+.h3{font-size:10px;font-weight:600;margin:13px 0 7px}
+.infra{background:#191310;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:9px}
+.infra .t{display:flex;justify-content:space-between;align-items:center}
+.infra .t span{font-size:8px;display:flex;align-items:center;gap:5px}
+.infra .t span:before{content:"";width:12px;height:12px;border-radius:3px;background:#2f6b3c;display:inline-block}
+.av{font-size:6px;letter-spacing:.1em;background:rgba(215,238,74,.15);color:#d7ee4a;padding:2px 5px;border-radius:3px}
+.infra p{font-size:7px;color:#7d766d;margin:4px 0 7px}
+.infra .f{display:flex;align-items:center;gap:5px;font-size:6.5px;color:#7d766d}
+.fl{display:flex;gap:2px}
+.fl i{width:8px;height:5px;border-radius:1px;display:block}
+.infra .f b{margin-left:auto;color:#a29a90;font-weight:500}
+.sbar{display:flex;justify-content:space-between;font-size:6.5px;padding:8px 12px 4px;font-weight:600}
+.rhead{display:flex;align-items:center;gap:7px;padding:2px 12px 9px}
+.rhead svg{width:11px;height:11px;stroke:#e9e9ec}
+.rhead b{font-size:10px}
+.earn{margin-left:auto;font-size:6px;color:#a9a9b2;border:1px solid rgba(255,255,255,.14);padding:2px 5px;border-radius:8px}
+.rcard{margin:0 12px;background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:10px}
+.rcard .k{font-size:6.5px;color:#a9a9b2;margin-bottom:5px}
+.rline{display:flex;align-items:center;justify-content:space-between}
+.stars{display:flex;align-items:center;gap:5px;font-size:15px;font-weight:700;color:#3ddc84}
+.stars svg{width:13px;height:13px}
+.redeem{font-size:7px;font-weight:600;background:#2c2c31;color:#fff;border:0;border-radius:20px;padding:4px 9px}
+.rcard .c{font-size:6.5px;color:#8d8d96;margin-top:6px}
+.sec{font-size:8px;font-weight:600;margin:13px 12px 7px;display:flex;align-items:center;gap:5px}
+.sec:before{content:"";width:2px;height:9px;background:#3ddc84;border-radius:2px}
+.ev{margin:0 12px 7px;background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:9px;display:flex;gap:8px;align-items:center}
+.ev .art{width:34px;height:34px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:15px}
+.a1{background:linear-gradient(145deg,#1f5b3a,#0e2a1c)}
+.a2{background:linear-gradient(145deg,#2a4a7a,#0f1c30)}
+.ev .m{flex:1}
+.ev .m b{display:block;font-size:7.5px;line-height:1.35}
+.ev .m span{display:block;font-size:6px;color:#8d8d96;margin-top:3px}
+.ev .m em{font-style:normal;color:#3ddc84;font-weight:600}
+.gob{font-size:7px;font-weight:700;background:#3ddc84;color:#08130c;border:0;border-radius:20px;padding:5px 11px}
+.rfoot{margin:11px 12px 0;background:#202027;border-radius:9px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
+.rfoot b{font-size:8px}
+.rfoot i{width:16px;height:16px;border-radius:50%;background:#3ddc84;display:grid;place-items:center;font-style:normal;font-size:8px}
+.toast{position:absolute;left:12px;right:12px;top:52px;background:#3ddc84;color:#08130c;font-size:7px;font-weight:600;border-radius:7px;padding:6px;text-align:center;opacity:0;transform:translateY(-6px);transition:.25s;z-index:6}
+.toast.on{opacity:1;transform:none}
+.note{text-align:center;font-size:11px;color:#7d766d;padding:14px 0 4px}
+@media(max-width:760px){
+  body{display:block;padding:0;min-height:0;overflow-x:hidden}
+  .stage{transform:none;flex-direction:column;align-items:center;gap:16px;padding:16px 12px 8px}
+  .l,.r{transform:none;width:min(330px,94vw);margin-top:0}
+  .l .screen,.r .screen{height:auto;min-height:540px}
+  .inpwrap{padding:11px 10px}
+  .inpwrap input{font-size:16px}
+  .go{padding:14px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone l"><div class="notch"></div><div class="screen">
+    <div class="checker"></div>
+    <div class="stats">
+      <div class="stat"><b>126</b><span>proxy network</span><i>● proxies available</i></div>
+      <div class="stat"><b id="s2">106</b><span>virtual devices</span><i>● ready to launch</i></div>
+      <div class="stat"><b>35</b><span>network latency</span><i>● optimal connection</i></div>
+    </div>
+    <div class="panel">
+      <div class="ptitle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>REFERRAL GENERATOR</div>
+      <div class="sub">Drop your link below and let RG take it from here.</div>
+      <label class="lbl">Your referral link</label>
+      <div class="inpwrap" id="iw"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+        <input id="link" placeholder="https://pro.tiktok.com/t/ZP9f5SE93oWFd-2N5iE/" autocapitalize="off" autocomplete="off" spellcheck="false"></div>
+      <div class="row2">
+        <div class="sel"><span class="flag"></span><div><small>PROXY REGION</small>United States</div></div>
+        <div class="sel"><span class="dot"></span><div><small>VIRTUAL DEVICE</small>Android · Pixel 8</div></div>
+      </div>
+      <button class="go" id="btn" disabled>Paste a link to begin</button>
+      <div class="bar"><div id="prog"></div></div>
+      <div class="status" id="st">Idle</div>
+    </div>
+    <div class="h3">Your infrastructure</div>
+    <div class="infra"><div class="t"><span>Global proxy network</span><b class="av">AVAILABLE</b></div>
+      <p>A local connection, wherever you go.</p>
+      <div class="f"><div class="fl"><i style="background:#b22234"></i><i style="background:#fff"></i><i style="background:#003399"></i><i style="background:#fff"></i><i style="background:#cf142b"></i></div>+20 regions<b>HTTP / SOCKS5</b></div>
+    </div>
+  </div></div>
+
+  <div class="phone r"><div class="notch"></div><div class="screen">
+    <div class="toast" id="toast">+1 referral attributed</div>
+    <div class="sbar"><span>5G only</span><span>6:53 PM</span></div>
+    <div class="rhead"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="m15 18-6-6 6-6"/></svg><b>Rewards</b><span class="earn">Stars earned</span></div>
+    <div class="rcard"><div class="k">Your Stars</div>
+      <div class="rline"><div class="stars"><svg viewBox="0 0 24 24" fill="#3ddc84"><path d="m12 2 3 6.6 7 .9-5.1 4.8 1.3 7L12 18l-6.2 3.3 1.3-7L2 9.5l7-.9z"/></svg><span id="sc">3,796,000</span></div>
+        <button class="redeem">Redeem</button></div>
+      <div class="c">Available for gift cards and coupons</div>
+    </div>
+    <div class="sec">NFL limited-time events</div>
+    <div class="ev"><div class="art a1">🏈</div><div class="m"><b>Spin the wheel to get up to <em>800,000</em></b><span>Start spinning!</span></div><button class="gob">GO</button></div>
+    <div class="ev"><div class="art a2">⚽</div><div class="m"><b>Kick the ball and get up to <em>1,700,000</em></b><span>Get your Stars!</span></div><button class="gob">GO</button></div>
+    <div class="rfoot"><b>NFL activities</b><i>↗</i></div>
+  </div></div>
+</div>
+<p class="note">Simulation — referrals are not live yet</p>
+<script>
+const link=document.getElementById('link'),btn=document.getElementById('btn'),st=document.getElementById('st'),
+prog=document.getElementById('prog'),iw=document.getElementById('iw'),toast=document.getElementById('toast'),sc=document.getElementById('sc');
+let stars=3796000,busy=false;
+link.addEventListener('input',()=>{
+  const v=link.value.trim(),ok=/^https?:\/\/([\w-]+\.)*(tiktok\.com|tik\.to)\//i.test(v);
+  iw.classList.toggle('ok',ok);btn.disabled=!ok||busy;
+  if(!v){btn.textContent='Paste a link to begin';st.textContent='Idle';st.className='status';}
+  else if(!ok){btn.textContent='Link not recognised';st.textContent='Needs a tiktok.com URL';st.className='status err';}
+  else{btn.textContent='Generate referral';st.textContent='Link looks valid';st.className='status';}
+});
+const steps=[['Spawning virtual device…',18],['Rotating residential proxy…',38],['Applying fingerprint…',55],['Preparing your referral…',74],['Sending referral…',92],['Referral attributed',100]];
+btn.addEventListener('click',async()=>{
+  if(busy)return;busy=true;btn.disabled=true;btn.textContent='Sending referral…';
+  for(const[t,p]of steps){st.textContent=t;st.className='status';prog.style.width=p+'%';await new Promise(r=>setTimeout(r,620));}
+  st.className='status done';btn.textContent='Send another';
+  const g=800+Math.floor(Math.random()*700),f=stars;stars+=g;let i=0;
+  const t=setInterval(()=>{i++;sc.textContent=Math.round(f+g*i/14).toLocaleString();if(i>=14)clearInterval(t);},32);
+  toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),2600);
+  setTimeout(()=>{prog.style.width='0%';busy=false;btn.disabled=false;st.textContent='Referral sent · ready for the next one';},1400);
+  document.getElementById('s2').textContent=105+Math.floor(Math.random()*8);
+});
+</script>
+</body>
+</html>
